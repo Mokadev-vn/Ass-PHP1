@@ -2,17 +2,24 @@
     session_start();
     require_once './libs/db.php';
 
-    $name = isset($_POST['name']) ? $_POST['name'] : '';
-    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
     $repassword = isset($_POST['repassword']) ? $_POST['repassword'] : '';
     $birthdate = isset($_POST['birthdate']) ? $_POST['birthdate'] : '';
     $avatar = isset($_FILES['avatar']) ? $_FILES['avatar'] : '';
     $role = 0;
 
+    // validate data
     
     if($name == '' || $email == '' || $password == '' || $birthdate == ''){
         $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
+        header('Location: register.php');
+        die();
+    }
+
+    if(strlen($password) < 6 || (strlen(str_replace(" ","",$password)) != strlen($password))){
+        $_SESSION['error'] = "Mật khẩu không được chứa khoảng trắng và nhiều hơn 6 kí tự!";
         header('Location: register.php');
         die();
     }
@@ -25,11 +32,15 @@
 
     if(!preg_match('/^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
     "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
-    "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$/',$name)){
-        $_SESSION['error'] = "Tên Không Được Chứa Kí Tự Đặc Biệt!";
+    "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$/',$name) 
+                        || strlen($name) < 2 
+                        || strlen($name) > 30){
+
+        $_SESSION['error'] = "Tên Không Được Chứa Kí Tự Đặc Biệt Và Trong Khoảng 4-30 Kí Tự";
         header('Location: register.php');
         die();
     }
+
 
     if(!preg_match("/^[a-z][a-z0-9_\.]{1,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$/",$email)){
         $_SESSION['error'] = "Email sai định dạng!";
