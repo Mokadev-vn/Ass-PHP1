@@ -66,7 +66,7 @@ require_once './libs/db.php';
                         <td><?= $user['email'] ?></td>
                         <td><?= ($user['role'] == 1) ? "Admin" : "User" ?></td>
                         <td><?= formatDate($user['birthday']) ?></td>
-                        <td><a href="<?= BASE_URL ?>user-eidt.php=<?= $user['id'] ?>" class="btn btn-sm btn-primary">Edit</a></td> 
+                        <td><a href="<?= BASE_URL ?>user-edit.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-primary">Edit</a></td> 
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

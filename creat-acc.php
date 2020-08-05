@@ -11,7 +11,7 @@
     $role = 0;
 
     // validate data
-    
+
     if($name == '' || $email == '' || $password == '' || $birthdate == ''){
         $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
         header('Location: register.php');
@@ -83,7 +83,7 @@
 
 
     }else{
-        $_SESSION['error'] = "Vui lòng chọn file đúng định dạng ảnh";
+        $_SESSION['error'] = "Vui lòng chọn file hoặc file phải đúng định dạng ảnh";
         header('Location: register.php');
         die();
     }

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
     <?php include_once 'inc/style.php' ?>
 </head>
 
@@ -21,7 +21,7 @@
                         <?php
                         if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
                             echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
-                            $_SESSION['error'] = '';
+                            unset($_SESSION['error']);
                         }
 
                         ?>
