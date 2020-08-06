@@ -1,6 +1,5 @@
 <?php
-    session_start();
-    require_once './libs/db.php';
+    require_once '../libs/config.php';
 
     $name = isset($_POST['name']) ? trim($_POST['name']) : '';
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
@@ -73,7 +72,7 @@
 
         $nameArr = explode(".", $avatar['name']);
 
-        $fileName = './avatars/'.(md5($nameArr[0]) ."_".time(). "." . $nameArr[1]);
+        $fileName = '../avatars/'.(md5($nameArr[0]) ."_".time(). "." . $nameArr[1]);
     
         $result = move_uploaded_file($avatar['tmp_name'],$fileName);
         

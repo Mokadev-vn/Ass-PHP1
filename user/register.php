@@ -1,4 +1,6 @@
-<?php session_start(); ?>
+<?php
+require_once '../libs/config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,21 +8,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng kí tài khoản </title>
-    <?php include_once './inc/style.php'; ?>
+    <?php include_once '../inc/style.php'; ?>
 </head>
-<?php include_once './inc/header.php'; ?>
+<?php include_once '../inc/header.php'; ?>
 
 <main class="container-fluid" style="margin-top: 40px;">
     <div class="card">
         <div class="card-header">ĐĂNG kÍ TÀI KHOẢN</div>
-        <form action="<?= BASE_URL ?>creat-acc.php" method="post" enctype="multipart/form-data" style="margin: 20px;">
+        <form action="<?= BASE_URL ?>user/creat-acc.php" method="post" enctype="multipart/form-data" style="margin: 20px;">
             <?php
-            if (isset($_SESSION['error']) && $_SESSION['error']!= '') {
+            if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
                 echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
                 unset($_SESSION['error']);
             }
 
-            if(isset($_SESSION['success']) && $_SESSION['success'] != '') {
+            if (isset($_SESSION['success']) && $_SESSION['success'] != '') {
                 echo '<div class="alert alert-success">' . $_SESSION['success'] . '</div>';
                 unset($_SESSION['success']);
             }
@@ -70,4 +72,4 @@
 
 
 <body>
-    <?php include_once './inc/footer.php'; ?>
+    <?php include_once '../inc/footer.php'; ?>

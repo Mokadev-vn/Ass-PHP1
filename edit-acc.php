@@ -1,15 +1,14 @@
 <?php
-session_start();
-require_once './libs/db.php';
+require_once './libs/config.php';
+$conn = connDB();
 
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
-$email = isset($_POST['email']) ? trim($_POST['email']) : '';
 $birthdate = isset($_POST['birthdate']) ? $_POST['birthdate'] : '';
 $avatar = isset($_FILES['avatar']) ? $_FILES['avatar'] : '';
 $fileName = $_POST['avatarOld'];
 $id = $_POST['id'];
 
-if($name == '' || $email == '' || $birthdate == ''){
+if($name == '' || $birthdate == ''){
     $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
     header('Location: user-edit.php?id='.$id);
     die();
@@ -29,12 +28,6 @@ if (
     die();
 }
 
-
-if(!preg_match("/^[a-z][a-z0-9_\.]{1,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$/",$email)){
-    $_SESSION['error'] = "Email sai định dạng!";
-    header('Location: user-edit.php?id='.$id);
-    die();
-}
 
 
 if ($avatar['size'] > 0) {
@@ -57,8 +50,8 @@ if ($avatar['size'] > 0) {
     }
 }
 
-$conn = connDB();
-$updateUserSql = "UPDATE users SET name = '$name', email = '$email', avatar = '$fileName', birthday = '$birthdate' WHERE id = '$id'";
+
+$updateUserSql = "UPDATE users SET name = '$name', avatar = '$fileName', birthday = '$birthdate' WHERE id = '$id'";
 $stmt = $conn->prepare($updateUserSql);
 if($stmt->execute()){
     $_SESSION['success'] = "Update Success";

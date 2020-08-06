@@ -1,6 +1,5 @@
 <?php
-session_start();
-require_once './libs/db.php';
+require_once './libs/config.php';
 
 $idUser = isset($_GET['id']) ? $_GET['id'] : '';
 
@@ -22,7 +21,7 @@ if ($idUser == '') {
 
 <body>
     <?php include_once 'inc/header.php' ?>
-    <main class="container-fluid">
+    <main class="container-fluid" style="margin-top: 40px;">
         <?php
         $conn = connDB();
 
@@ -63,7 +62,7 @@ if ($idUser == '') {
                         </div>
                         <div class="form-group">
                             <label for="">Email</label>
-                            <input type="text" name="email" class="form-control" value="<?= $user['email'] ?>" readonly>
+                            <input type="text" class="form-control" value="<?= $user['email'] ?>" readonly>
                         </div>
                         <div class="form-group">
                             <label for="">Ngày sinh</label>

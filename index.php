@@ -1,5 +1,5 @@
 <?php 
-require_once './libs/db.php';
+require_once './libs/config.php';
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +44,7 @@ require_once './libs/db.php';
             </div>
         </form>
         <div class="card">
-            <div class="card-header">List Users <a href="<?= BASE_URL?>register.php" class="float-right btn btn-sm btn-success">Add User</a></div>
+            <div class="card-header">List Users <a href="<?= BASE_URL?>user/register.php" class="float-right btn btn-sm btn-success">Add User</a></div>
             <table class="table" style="text-align: center;">
                 <thead>
                     <tr>
