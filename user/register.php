@@ -10,12 +10,13 @@ require_once '../libs/config.php';
     <title>Đăng kí tài khoản </title>
     <?php include_once '../inc/style.php'; ?>
 </head>
+<body>
 <?php include_once '../inc/header.php'; ?>
 
 <main class="container-fluid" style="margin-top: 40px;">
     <div class="card">
         <div class="card-header">ĐĂNG kÍ TÀI KHOẢN</div>
-        <form action="<?= BASE_URL ?>user/creat-acc.php" method="post" enctype="multipart/form-data" style="margin: 20px;">
+        <form action="<?= BASE_URL ?>user/create-acc.php" method="post" enctype="multipart/form-data" style="margin: 20px;">
             <?php
             if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
                 echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
@@ -69,7 +70,4 @@ require_once '../libs/config.php';
         </form>
     </div>
 </main>
-
-
-<body>
     <?php include_once '../inc/footer.php'; ?>

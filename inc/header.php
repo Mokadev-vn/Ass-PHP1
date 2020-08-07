@@ -6,10 +6,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link active" href="<?= BASE_URL.'danh-muc.php' ?>">Danh Mục <span class="sr-only">(current)</span></a>
-                    <a class="nav-item nav-link" href="#">Features</a>
-                    <a class="nav-item nav-link" href="#">Pricing</a>
-                    <a class="nav-item nav-link disabled" href="#">Disabled</a>
+                    <a class="nav-item nav-link active" href="<?= BASE_URL.'admin/category.php' ?>">Categories <span class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="#">Products</a>
+                    <a class="nav-item nav-link" href="<?= BASE_URL.'user/register.php' ?>">Register</a>
+                    <a class="nav-item nav-link" href="<?= BASE_URL.'login.php' ?>">Login</a>
                 </div>
             </div>
         </nav>

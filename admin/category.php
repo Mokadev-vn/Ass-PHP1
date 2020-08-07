@@ -2,20 +2,20 @@
 require_once '../libs/config.php';
 $conn = connDB();
 
-    $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+$keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 
-    $getCateSql = "SELECT * FROM categories";
+$getCateSql = "SELECT * FROM categories";
 
-    if($keyword != ''){
-        $getCateSql .= " WHERE name like '%$keyword%' or email like '%$keyword%'";
-    }
+if ($keyword != '') {
+    $getCateSql .= " WHERE name like '%$keyword%' or email like '%$keyword%'";
+}
 
 
-    $stmt = $conn->prepare($getCateSql);
-    $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    $stmt->execute();
+$stmt = $conn->prepare($getCateSql);
+$stmt->setFetchMode(PDO::FETCH_ASSOC);
+$stmt->execute();
 
-    $categories = $stmt->fetchAll();
+$categories = $stmt->fetchAll();
 
 ?>
 
@@ -41,6 +41,12 @@ $conn = connDB();
                     </div>
                 </div>
             </form>
+            <?php
+            if (isset($_SESSION['success']) && $_SESSION['success'] != '') {
+                echo '<div class="alert alert-success">' . $_SESSION['success'] . '</div>';
+                unset($_SESSION['success']);
+            }
+            ?>
             <div class="card">
                 <div class="card-header">List Categories <a href="<?= BASE_URL ?>admin/add-cate.php" class="float-right btn btn-sm btn-success">Add Categories</a></div>
                 <table class="table table-bordered" style="text-align: center;">
@@ -56,7 +62,7 @@ $conn = connDB();
                             <tr>
                                 <th scope="row"><?= $cate['id'] ?></th>
                                 <td><?= $cate['name'] ?></td>
-                                <td><a href="<?= BASE_URL ?>user-edit.php?id=<?= $cate['id'] ?>" class="btn btn-sm btn-success">View</a> <a href="<?= BASE_URL ?>user-edit.php?id=<?= $cate['id'] ?>" class="btn btn-sm btn-primary">View</a> <a href="<?= BASE_URL ?>user-edit.php?id=<?= $cate['id'] ?>" class="btn btn-sm btn-danger">Delete</a></td>
+                                <td><a href="<?= BASE_URL ?>admin/control-cate.php?id=<?= $cate['id'] ?>" class="btn btn-sm btn-primary">Edit</a> <a href="<?= BASE_URL ?>admin/control-cate.php?id=<?= $cate['id'] ?>&type=delete" class="btn btn-sm btn-danger">Delete</a></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

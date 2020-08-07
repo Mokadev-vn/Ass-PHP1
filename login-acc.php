@@ -20,9 +20,13 @@ $stmt->setFetchMode(PDO::FETCH_ASSOC);
 $stmt->execute();
 $user = $stmt->fetch();
 if($user && password_verify($password,$user['password'])){
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['role'] = $user['role'];
-    
+    $_SESSION['user'] = [
+        'id' => $user['id'],
+        'role' => $user['role']
+    ];
+
+    $path = ($user['role'] == 1) ? 'admin' : '' ;
+    header("Location: $path");    
 }else{
     echo "fail";
 }
