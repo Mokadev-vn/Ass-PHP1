@@ -1,5 +1,6 @@
 <?php
     require_once './libs/config.php';
+    checkLog(true);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +20,7 @@
             <div class="col-md-6" style="margin : auto;">
                 <div class="card">
                     <div class="card-header">Đăng Nhập</div>
-                    <form action="<?= BASE_URL ?>login-acc.php" method="post" style="padding: 10px;">
+                    <form action="<?= BASE_URL ?>hand-login.php" method="post" style="padding: 10px;">
                         <?php
                         if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
                             echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';

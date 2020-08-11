@@ -1,0 +1,25 @@
+Options All -Indexes
+
+<files common.php>
+
+order allow,deny
+
+deny from all
+
+</files>
+
+<files config.php>
+
+order allow,deny
+
+deny from all
+
+</files>
+
+<files db.php>
+
+order allow,deny
+
+deny from all
+
+</files>

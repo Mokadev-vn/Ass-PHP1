@@ -1,0 +1,25 @@
+Options All -Indexes
+
+<files footer.php>
+
+order allow,deny
+
+deny from all
+
+</files>
+
+<files header.php>
+
+order allow,deny
+
+deny from all
+
+</files>
+
+<files style.php>
+
+order allow,deny
+
+deny from all
+
+</files>

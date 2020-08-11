@@ -1,6 +1,6 @@
 <?php
-require_once './libs/config.php';
-$conn = connDB();
+require_once '../libs/config.php';
+role();
 
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
 $birthdate = isset($_POST['birthdate']) ? $_POST['birthdate'] : '';
@@ -10,7 +10,7 @@ $id = $_POST['id'];
 
 if($name == '' || $birthdate == ''){
     $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
-    header('Location: user-edit.php?id='.$id);
+    header('Location: '. BASE_URL .'user/edit.php');
     die();
 }
 
@@ -24,36 +24,46 @@ if (
 ) {
 
     $_SESSION['error'] = "Tên Không Được Chứa Kí Tự Đặc Biệt Và Trong Khoảng 4-30 Kí Tự";
-    header('Location: user-edit.php?id='.$id);
+    header('Location: '. BASE_URL .'user/edit.php');
     die();
 }
 
 
 
 if ($avatar['size'] > 0) {
-    if (
-        $avatar['type'] == "image/png" ||
-        $avatar['type'] == "image/jpeg" ||
-        $avatar['type'] == "image/gif" ||
-        $avatar['type'] == "image/jpg"
-    ) {
+    $type = [ 
+        "image/png", 
+        "image/jpeg", 
+        "image/gif", 
+        "image/jpg",
+    ];
+    
+    if (in_array($avatar['type'], $type)) {
 
         $nameArr = explode(".", $avatar['name']);
 
-        $fileName = './avatars/' . (md5($nameArr[0]) . "_" . time() . "." . $nameArr[1]);
+        $fileName = (md5($nameArr[0]) . "_" . time() . "." . $nameArr[1]);
 
-        $result = move_uploaded_file($avatar['tmp_name'], $fileName);
+        $result = move_uploaded_file($avatar['tmp_name'],'../public/avatars/' . $fileName);
     } else {
         $_SESSION['error'] = "Vui lòng chọn file hoặc file phải đúng định dạng ảnh";
-        header('Location: user-edit.php?id='.$id);
+        header('Location: '. BASE_URL .'user/edit.php');
         die();
     }
 }
 
 
 $updateUserSql = "UPDATE users SET name = '$name', avatar = '$fileName', birthday = '$birthdate' WHERE id = '$id'";
-$stmt = $conn->prepare($updateUserSql);
-if($stmt->execute()){
+$table = "users";
+$data  = [
+    'name' => $name,
+    'avatar' => $fileName,
+    'birthday' => $birthdate
+];
+$where = "id = '$id'";
+
+$result = update($table, $data, $where);
+if($result){
     $_SESSION['success'] = "Update Success";
-    header('Location: user-edit.php?id='.$id);
+    header('Location: '. BASE_URL .'user/edit.php');
 }

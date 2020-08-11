@@ -1,5 +1,6 @@
 <?php
     require_once '../libs/config.php';
+    checkLog();
 
     $name = isset($_POST['name']) ? trim($_POST['name']) : '';
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
@@ -13,19 +14,19 @@
 
     if($name == '' || $email == '' || $password == '' || $birthdate == ''){
         $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
-        header('Location: register.php');
+        header('Location: '. BASE_URL .'user/register.php');
         die();
     }
 
     if(strlen($password) < 6 || (strlen(str_replace(" ","",$password)) != strlen($password))){
         $_SESSION['error'] = "Mật khẩu không được chứa khoảng trắng và nhiều hơn 6 kí tự!";
-        header('Location: register.php');
+        header('Location: '. BASE_URL .'user/register.php');
         die();
     }
 
     if($password != $repassword){
         $_SESSION['error'] = "Vui lòng nhập 2 mật khẩu trùng nhau";
-        header('Location: register.php');
+        header('Location: '. BASE_URL .'user/register.php');
         die();
     }
 
@@ -36,14 +37,14 @@
                         || strlen($name) > 30){
 
         $_SESSION['error'] = "Tên Không Được Chứa Kí Tự Đặc Biệt Và Trong Khoảng 4-30 Kí Tự";
-        header('Location: register.php');
+        header('Location: '. BASE_URL .'user/register.php');
         die();
     }
 
 
     if(!preg_match("/^[a-z][a-z0-9_\.]{1,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$/",$email)){
         $_SESSION['error'] = "Email sai định dạng!";
-        header('Location: register.php');
+        header('Location: '. BASE_URL .'user/register.php');
         die();
     }
 
@@ -53,28 +54,29 @@
 
     $conn = connDB();
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = '$email'");
+    $getUserSql = "SELECT * FROM users WHERE email = '$email'";
+    $result = getRow($getUserSql);
 
-    $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    $stmt->execute();
-
-    if($stmt->fetch()){
+    if($result){
         $_SESSION['error'] = "Email này đã đăng kí tài khoản rồi";
-        header('Location: register.php');
+        header('Location: '. BASE_URL .'user/register.php');
         die();
     }
 
-
-    if($avatar['type'] == "image/png" || 
-       $avatar['type'] == "image/jpeg" || 
-       $avatar['type'] == "image/gif" || 
-       $avatar['type'] == "image/jpg"){
+    $type = [ 
+        "image/png", 
+        "image/jpeg", 
+        "image/gif", 
+        "image/jpg",
+    ];
+    
+    if (in_array($avatar['type'], $type)) {
 
         $nameArr = explode(".", $avatar['name']);
 
-        $fileName = '../avatars/'.(md5($nameArr[0]) ."_".time(). "." . $nameArr[1]);
+        $fileName = (md5($nameArr[0]) ."_".time(). "." . $nameArr[1]);
     
-        $result = move_uploaded_file($avatar['tmp_name'],$fileName);
+        $result = move_uploaded_file($avatar['tmp_name'],'../public/avatars/'.$fileName);
         
         if(!$result){
             $fileName = '';
@@ -83,16 +85,24 @@
 
     }else{
         $_SESSION['error'] = "Vui lòng chọn file hoặc file phải đúng định dạng ảnh";
-        header('Location: register.php');
+        header('Location: '. BASE_URL .'user/register.php');
         die();
     }
 
-    $sql = "INSERT INTO users (name, email, avatar, password, role, birthday) VALUES ('$name', '$email', '$fileName', '$password2', '$role', '$birthdate')";
+    $table = "users";
+    $data  = [
+        'name' => $name,
+        'email' => $email,
+        'avatar' => $fileName,
+        'password' => $password2,
+        'role' => $role,
+        'birthday' => $birthdate
+    ];
 
-    $stmt = $conn->prepare($sql);
+    $result = insert($table, $data);
 
-    $_SESSION['success'] = ($stmt->execute())? "Đăng Kí Tài Khoản Thành Công!" : "Đăng Kí Không Thành Công Vui Lòng Thử Lại!";
-    header('Location: register.php');
+    $_SESSION['success'] = ($result)? "Đăng Kí Tài Khoản Thành Công!" : "Đăng Kí Không Thành Công Vui Lòng Thử Lại!";
+    header('Location: '. BASE_URL .'user/register.php');
    
 
 

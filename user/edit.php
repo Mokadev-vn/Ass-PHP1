@@ -1,47 +1,28 @@
 <?php
-require_once './libs/config.php';
+require_once '../libs/config.php';
+role();
+$id = $_SESSION['user']['id'];
 
-$idUser = isset($_GET['id']) ? $_GET['id'] : '';
+$getUserSql = "SELECT * FROM users WHERE id = '$id'";
+$user = getRow($getUserSql);
 
-if ($idUser == '') {
-    header('Location: index.php');
-    die();
-}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <?php include_once 'inc/style.php' ?>
+    <?php include_once '../inc/style.php' ?>
 </head>
 
 <body>
-    <?php include_once 'inc/header.php' ?>
+    <?php include_once '../inc/header.php' ?>
     <main class="container-fluid" style="margin-top: 40px;">
-        <?php
-        $conn = connDB();
-
-        $getUserSql = "SELECT * FROM users WHERE id = :id";
-
-        $stmt = $conn->prepare($getUserSql);
-        $stmt->bindParam(':id', $idUser);
-        $stmt->execute();
-        $user = $stmt->fetch();
-
-        if (!$user) {
-            header('Location: index.php');
-            die();
-        }
-
-        ?>
-
         <div class="card">
             <div class="card-header">Edit User</div>
-            <form action="<?= BASE_URL ?>edit-acc.php" method="post" enctype="multipart/form-data" style="margin: 20px;">
+            <form action="<?= BASE_URL ?>user/hand-edit.php" method="post" enctype="multipart/form-data" style="margin: 20px;">
                 <?php
                 if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
                     echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
@@ -71,7 +52,7 @@ if ($idUser == '') {
                     </div>
                     <div class="col-md-6">
                         <div class="form-group text-center">
-                            <img src="<?= $user['avatar'] ?>" alt="" style="width: 150px; height: 150px; border-radius: 50%;">
+                            <img src="<?= '../public/avatars/' . $user['avatar'] ?>" alt="" style="width: 150px; height: 150px; border-radius: 50%;">
                             <input type="hidden" name="avatarOld" value="<?= $user['avatar'] ?>">
                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
                         </div>
@@ -90,4 +71,4 @@ if ($idUser == '') {
             </form>
         </div>
     </main>
-    <?php include_once 'inc/footer.php' ?>
+    <?php include_once '../inc/footer.php' ?>
