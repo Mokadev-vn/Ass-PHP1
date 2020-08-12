@@ -1,6 +1,8 @@
 <?php
+// get list Category
 $getCateMenuSql = "SELECT * FROM categories WHERE show_menu = '1'";
 $cateMenus = getList($getCateMenuSql);
+
 ?>
 <header class="header container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -16,7 +18,8 @@ $cateMenus = getList($getCateMenuSql);
                 <?php else : ?>
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" id="navbarProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Hello, <?= $_SESSION['user']['name'] ?>
+                            <img src="<?= BASE_URL . 'public/avatars/' . $_SESSION['user']['avatar'] ?>" alt="" style="width: 30px; height: 30px; border-radius: 50%;">
+                            <?= $_SESSION['user']['name'] ?>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarProfile">
                             <a class="dropdown-item" href="<?= BASE_URL ?>user/edit.php">Edit Profile</a>
@@ -36,7 +39,6 @@ $cateMenus = getList($getCateMenuSql);
                     </div>
                     <a class="nav-item nav-link" href="<?= BASE_URL ?>product">Product</a>
                     <a class="nav-item nav-link" href="<?= BASE_URL ?>category">Category</a>
-
                 <?php endif; ?>
             </div>
         </div>

@@ -24,7 +24,7 @@ $products = getList($getProductSql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>List Products</title>
     <?php include_once '../inc/style.php' ?>
 </head>
 
@@ -69,7 +69,7 @@ $products = getList($getProductSql);
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">Main Image</th>
+                            <th scope="col">Image</th>
                             <th scope="col">Name</th>
                             <th scope="col">Detail</th>
                             <th scope="col">Price</th>

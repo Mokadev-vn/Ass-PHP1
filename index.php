@@ -2,11 +2,8 @@
 require_once './libs/config.php';
 role();
 
-
 // lấy dữ liệu search
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
-
-
 
 // Sql get data table user
 $getUserSql = "SELECT * FROM users";
@@ -44,7 +41,7 @@ $users = getList($getUserSql);
                 </div>
             </form>
             <div class="card">
-                <div class="card-header">List Users <?php if (role('admin', 1)) echo '<a href="' . BASE_URL . 'user/register.php" class="float-right btn btn-sm btn-success">Add User</a>'; ?></div>
+                <div class="card-header clearfix">List Users <?php if (role('admin', 1)) echo '<a href="' . BASE_URL . 'admin/add-user.php" class="float-right btn btn-sm btn-success">Add User</a>'; ?></div>
                 <table class="table" style="text-align: center;">
                     <thead>
                         <tr>

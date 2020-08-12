@@ -1,6 +1,7 @@
 <?php
-    require_once './libs/config.php';
-    checkLog(true);
+require_once './libs/config.php';
+checkLog();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

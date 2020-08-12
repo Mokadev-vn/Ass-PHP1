@@ -64,6 +64,8 @@ function getRow($sql){
     return $stmt->fetch();
 }
 
+
+// get id new insert in database
 function getIdInsertNew(){
     $conn = connDB();
     return $conn->lastInsertId();
