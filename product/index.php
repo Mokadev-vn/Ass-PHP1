@@ -9,7 +9,7 @@ $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 $getProductSql = "SELECT p.*, c.name as cate_name FROM products p join categories c on p.cate_id = c.id";
 
 if ($keyword != '') {
-    $getProductSql .= " WHERE name like '%$keyword%'";
+    $getProductSql .= " WHERE p.name like '%$keyword%'";
 }
 
 $products = getList($getProductSql);

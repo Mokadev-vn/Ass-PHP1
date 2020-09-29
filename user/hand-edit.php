@@ -8,8 +8,17 @@ $avatar = isset($_FILES['avatar']) ? $_FILES['avatar'] : '';
 $fileName = $_POST['avatarOld'];
 $id = $_POST['id'];
 
-if($name == '' || $birthdate == ''){
-    $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
+if($name == ''){
+    $msg = "Tên không được để trống!";
+    error('name', $msg);
+}
+
+if($birthdate == ''){
+    $msg = "Phải chọn ngày tháng năm sinh";
+    error('date', $msg);
+}
+
+if(isset($_SESSION['error'])){
     header('Location: '. BASE_URL .'user/edit.php');
     die();
 }

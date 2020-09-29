@@ -23,19 +23,23 @@ checkLog();
                     <div class="card-header">Đăng Nhập</div>
                     <form action="<?= BASE_URL ?>hand-login.php" method="post" style="padding: 10px;">
                         <?php
-                        if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
+
+                        if (isset($_SESSION['error']) && $_SESSION['error'] != '' && !is_array($_SESSION['error'])) {
                             echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
                             unset($_SESSION['error']);
                         }
+
 
                         ?>
                         <div class="form-group">
                             <label for="">Email</label>
                             <input type="text" name="email" class="form-control">
+                            <?= (isset($_SESSION['error']['name'])) ? '<span class="text-danger">' . $_SESSION['error']['name'] . '</span>' : ''; ?>
                         </div>
                         <div class="form-group">
                             <label for="">Mật Khẩu </label>
                             <input type="password" name="password" class="form-control">
+                            <?= (isset($_SESSION['error']['password'])) ? '<span class="text-danger">' . $_SESSION['error']['password'] . '</span>' : ''; ?>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-sm btn-success">Đăng Nhập</button>
@@ -48,5 +52,5 @@ checkLog();
         </div>
 
     </main>
-
+    <?php unset($_SESSION['error']); ?>
     <?php include_once 'inc/footer.php' ?>

@@ -1,6 +1,6 @@
 <?php
 
-// function connect datebase
+// function connect database
 function connDB(){
     $dns = "mysql:host=localhost;dbname=web;charset=utf8";
     $dbUserName = "root";
@@ -9,7 +9,7 @@ function connDB(){
 }
 
 // function insert database
-function insert($table, $data){
+function insert($table, $data, $getId = false){
     $conn  = connDB();
     $fields = '';
     $values = '';
@@ -21,7 +21,11 @@ function insert($table, $data){
 
     $sql = "INSERT INTO $table (". trim($fields, ',') . ") VALUES (". trim($values, ',') . ")";
     $stmt = $conn->prepare($sql);
-    return $stmt->execute();
+    if(!$getId){
+        return $stmt->execute();
+    }
+    $stmt->execute();
+    return $conn->lastInsertId();
 }
 
 // function update database
@@ -62,11 +66,4 @@ function getRow($sql){
     $stmt->setFetchMode(PDO::FETCH_ASSOC);
     $stmt->execute();
     return $stmt->fetch();
-}
-
-
-// get id new insert in database
-function getIdInsertNew(){
-    $conn = connDB();
-    return $conn->lastInsertId();
 }

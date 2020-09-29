@@ -8,7 +8,7 @@ $showMenu = isset($_POST['showMenu']) ? trim($_POST['showMenu']) : '';
 $description = isset($_POST['description']) ? trim($_POST['description']) : '';
 
 if($name == ''){
-    $_SESSION['error'] = "Vui lòng nhập tên danh mục!";
+    $_SESSION['error'] = "Tên danh mục không được để trống!";
     header("Location: ". BASE_URL ."category/edit.php?id=$id");
     die();
 }

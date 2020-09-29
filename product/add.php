@@ -24,7 +24,8 @@ $categories = getList($getCateSql);
             <div class="card-header">Create Product</div>
             <form action="<?= BASE_URL ?>product/hand-add.php" method="post" enctype="multipart/form-data" style="margin: 20px;">
                 <?php
-                if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
+
+                if (isset($_SESSION['error']) && $_SESSION['error'] != '' && !is_array($_SESSION['error'])) {
                     echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
                     unset($_SESSION['error']);
                 }
@@ -40,6 +41,7 @@ $categories = getList($getCateSql);
                         <div class="form-group">
                             <label for="">Product Name</label>
                             <input type="text" name="name" class="form-control">
+                            <?= (isset($_SESSION['error']['name'])) ? '<span class="text-danger">' . $_SESSION['error']['name'] . '</span>' : ''; ?>
                         </div>
                         <div class="form-group">
                             <label for="">Detail</label>
@@ -51,6 +53,7 @@ $categories = getList($getCateSql);
                         <div class="form-group">
                             <label for="">Main Image</label>
                             <input type="file" name="image" class="form-control">
+                            <?= (isset($_SESSION['error']['img'])) ? '<span class="text-danger">' . $_SESSION['error']['img'] . '</span>' : ''; ?>
                         </div>
                         <div class="form-group">
                             <label for="">Main Image</label>
@@ -76,17 +79,18 @@ $categories = getList($getCateSql);
                         <div class="form-group">
                             <label for="">Product Price</label>
                             <input type="number" name="price" class="form-control">
+                            <?= (isset($_SESSION['error']['price'])) ? '<span class="text-danger">' . $_SESSION['error']['price'] . '</span>' : ''; ?>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-sm btn-info">Lưu</button>
                     &nbsp;
-                    <a href="" class="btn btn-sm btn-danger">Hủy</a>
+                    <a href="<?= BASE_URL ?>product" class="btn btn-sm btn-danger">Hủy</a>
                 </div>
 
             </form>
         </div>
     </main>
-
+    <?php unset($_SESSION['error']); ?>
     <?php include_once '../inc/footer.php'; ?>

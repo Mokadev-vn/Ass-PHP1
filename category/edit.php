@@ -71,7 +71,7 @@ if ($id == '') {
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-sm btn-info">Lưu</button>
                             &nbsp;
-                            <a href="" class="btn btn-sm btn-danger">Hủy</a>
+                            <a href="<?= BASE_URL ?>category" class="btn btn-sm btn-danger">Hủy</a>
                         </div>
 
                     </form>

@@ -3,52 +3,59 @@ require_once '../libs/config.php';
 role();
 
 $name      = isset($_POST['name']) ? trim($_POST['name'])    : '';
-$detail    = isset($_POST['detail']) ? trim($_POST['detail']): '';
+$detail    = isset($_POST['detail']) ? trim($_POST['detail']) : '';
 $image     = isset($_FILES['image']) ? $_FILES['image']      : '';
 $category  = isset($_POST['category']) ? $_POST['category']  : '';
 $price     = isset($_POST['price']) ? $_POST['price']        : '';
 $galleries = $_FILES['galleries'];
 
-
-if ($name == '' || $detail == '' || $price == '') {
-    $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
-    header('Location: '. BASE_URL.'product/add.php');
-    die();
+if ($name == '') {
+    $msg = "Tên sản phẩm không được để trống!";
+    error('name', $msg);
 }
 
-if ($image['size'] <= 0) {
-    $_SESSION['error'] = "Vui lòng chọn ảnh chính của sản phẩm";
-    header('Location: '. BASE_URL.'product/add.php');
-    die();
-}
-
-$type = [ 
-    "image/png", 
-    "image/jpeg", 
-    "image/gif", 
+$type = [
+    "image/png",
+    "image/jpeg",
+    "image/gif",
     "image/jpg",
 ];
 
-if (in_array($image['type'], $type)) {
+if ($image['size'] <= 0) {
+    $msg = "Vui lòng chọn ảnh chính của sản phẩm";
+    error('img', $msg);
+}else if (!in_array($image['type'], $type)) {
+    $msg = "Vui lòng chọn file hoặc file phải đúng định dạng ảnh";
+    error('img', $msg);
+}
 
-    $nameArr = explode(".", $image['name']);
 
-    $fileName = (md5($nameArr[0]) . "_" . time() . "." . $nameArr[1]);
+if ($price < 0 || $price == '') {
+    $msg = "Vui lòng nhập giá lớn hoặc bằng 0";
+    error('price', $msg);
+}
 
-    $result = move_uploaded_file($image['tmp_name'], '../public/products/' . $fileName);
 
-    if (!$result) {
-        $fileName = '';
-    }
-} else {
-    $_SESSION['error'] = "Vui lòng chọn file hoặc file phải đúng định dạng ảnh";
-    header('Location: '. BASE_URL.'product/add.php');
+
+if(isset($_SESSION['error'])){
+    header('Location: ' . BASE_URL . 'product/add.php');
     die();
+}
+
+
+$nameArr = explode(".", $image['name']);
+
+$fileName = (md5($nameArr[0]) . "_" . time() . "." . $nameArr[1]);
+
+$result = move_uploaded_file($image['tmp_name'], '../public/products/' . $fileName);
+
+if (!$result) {
+    $fileName = '';
 }
 
 $arrImg = [];
 
-for($i=0;$i<count($galleries['name']);$i++){
+for ($i = 0; $i < count($galleries['name']); $i++) {
     $nameImg  = $galleries['name'][$i];
     $tmp_name = $galleries['tmp_name'][$i];
     $typeImg  = $galleries['type'][$i];
@@ -57,18 +64,15 @@ for($i=0;$i<count($galleries['name']);$i++){
     if (in_array($typeImg, $type)) {
 
         $nameArr = explode(".", $nameImg);
-    
-        $fileName = (md5($nameArr[0]) . "_" . time() . "." . $nameArr[1]);
-    
-        $result = move_uploaded_file($tmp_name, '../public/products/' . $fileName);
-        
-        $arrImg[] = $fileName;
-        
-    }
 
+        $fileName = (md5($nameArr[0]) . "_" . time() . "." . $nameArr[1]);
+
+        $result = move_uploaded_file($tmp_name, '../public/products/' . $fileName);
+
+        $arrImg[] = $fileName;
+    }
 }
 
-$objImg = json_encode($arrImg);
 
 
 $table = "products";
@@ -80,25 +84,29 @@ $data  = [
     'cate_id' => $category
 ];
 
-$result = insert($table, $data);
+$result = insert($table, $data, true);
 
 if ($result) {
     $_SESSION['success'] = "Thêm sản phẩm '$name' thành công";
 } else {
     $_SESSION['error'] = "Có lỗi xảy ra vui lòng thử lại!";
-    header('Location: '. BASE_URL.'product');
+    header('Location: ' . BASE_URL . 'product');
     die();
 }
 
 // get id new insert
-$productId = getIdInsertNew();
+
+$productId = $result;
 
 $table = "product_galleries";
-$data  = [
-    'image' => $objImg,
-    'product_id' => $productId
-];
 
-insert($table, $data);
+foreach ($arrImg as $img) {
+    $data  = [
+        'image' => $img,
+        'product_id' => $productId
+    ];
+    insert($table, $data);
+}
 
-header('Location: '. BASE_URL.'product');
+
+header('Location: ' . BASE_URL . 'product');

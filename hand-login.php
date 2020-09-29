@@ -8,7 +8,16 @@ $password = isset($_POST['password']) ? $_POST['password'] : '';
 
 // validate data 
 if($email == '' || $password == ''){
-    $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
+    $msg = "Vui lòng nhập email!";
+    error('name', $msg);
+}
+
+if($password == ''){
+    $msg = "Vui lòng nhập password!";
+    error('password', $msg);
+}
+
+if(isset($_SESSION['error'])){
     header("Location: ".BASE_URL."login.php");
     die();
 }
@@ -25,7 +34,7 @@ if($user && password_verify($password,$user['password'])){
         'avatar' => $user['avatar'],
         'role' => $user['role']
     ];
-
+    $_SESSION['success'] = "Login successful.";
     header("Location: ".BASE_URL);    
 }else{
     $_SESSION['error'] = "Thông tin tài khoản mật khẩu không chính xác!";

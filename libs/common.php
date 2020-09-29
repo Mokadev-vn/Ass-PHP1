@@ -43,3 +43,9 @@ function checkLog($next = false)
 
     return true;
 }
+
+
+function error($key, $message){
+    $_SESSION['error'] = isset($_SESSION['error']) ? $_SESSION['error'] : [];
+    $_SESSION['error'][$key] = $message;
+}

@@ -14,6 +14,11 @@ $where = "id = '$id'";
 
 $result = remove($table, $where);
 
+$table = "product_galleries";
+$where = "product_id = '$id'";
+
+remove($table, $where);
+
 if($result){
     $_SESSION['success'] = "Remove Category By ID: $id Successfully!";
     header('Location: ' . BASE_URL.'product');

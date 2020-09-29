@@ -13,13 +13,13 @@ $getCateSql = "SELECT * FROM categories";
 $categories = getList($getCateSql);
 
 $getProductSql = "SELECT p.*, 
-                        c.name as cate_name, 
-                        pg.image as galleries FROM categories c  
+                        c.name as cate_name FROM categories c  
                                                 join products p on p.cate_id = c.id 
-                                                join product_galleries pg on p.id = pg.product_id
                                                 WHERE p.id = '$id'";
 $product = getRow($getProductSql);
-$objImg = json_decode($product['galleries']);
+
+$getGallerySql = "SELECT * FROM product_galleries WHERE product_id = '$id'";
+$galleries = getList($getGallerySql);
 
 ?>
 <!DOCTYPE html>
@@ -40,7 +40,7 @@ $objImg = json_decode($product['galleries']);
             <div class="card-header">Create Product</div>
             <form action="<?= BASE_URL ?>product/hand-edit.php" method="post" enctype="multipart/form-data" style="margin: 20px;">
                 <?php
-                if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
+                if (isset($_SESSION['error']) && $_SESSION['error'] != '' && !is_array($_SESSION['error'])) {
                     echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
                     unset($_SESSION['error']);
                 }
@@ -56,6 +56,7 @@ $objImg = json_decode($product['galleries']);
                         <div class="form-group">
                             <label for="">Product Name</label>
                             <input type="text" name="name" class="form-control" value="<?= $product['name'] ?>">
+                            <?= (isset($_SESSION['error']['name'])) ? '<span class="text-danger">' . $_SESSION['error']['name'] . '</span>' : ''; ?>
                         </div>
                         <div class="form-group">
                             <label for="">Detail</label>
@@ -72,20 +73,21 @@ $objImg = json_decode($product['galleries']);
                         <div class="form-group">
                             <label for="">Main Image</label>
                             <input type="file" name="image" class="form-control">
+                            <?= (isset($_SESSION['error']['img'])) ? '<span class="text-danger">' . $_SESSION['error']['img'] . '</span>' : ''; ?>
                         </div>
                         <div class="form-group">
                             <label for="">Main Image</label>
                             <div class="row text-center text-lg-left" id="galleries">
-                                <?php foreach ($objImg as $img) : ?>
+                                <?php foreach ($galleries as $img) : ?>
                                     <div class="col-lg-3 col-md-3 col-4">
-                                        <input type="hidden" name="oldGallies[]" value="<?= $img ?>">
                                         <div class="d-block mb-4 h-100 position-relative">
-                                            <img style="height: 100px; width: 130px" src="<?= BASE_URL . 'public/products/' . $img ?>" alt="">
-                                            <a href="#" class="remove-img"><i class="fas fa-times-circle"></i></a>
+                                            <img style="height: 100px; width: 130px" src="<?= BASE_URL . 'public/products/' . $img['image'] ?>" alt="">
+                                            <a href="#" class="remove-img" id="<?= $img['id'] ?>"><i class="fas fa-times-circle"></i></a>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
 
+                                <input type="hidden" name="removeGalleries" value="">
 
                                 <div class="col-lg-3 col-md-3 col-4">
                                     <div class="upload-btn-wrapper">
@@ -109,17 +111,18 @@ $objImg = json_decode($product['galleries']);
                         <div class="form-group">
                             <label for="">Product Price</label>
                             <input type="number" name="price" class="form-control" value="<?= $product['price']; ?>">
+                            <?= (isset($_SESSION['error']['price'])) ? '<span class="text-danger">' . $_SESSION['error']['price'] . '</span>' : ''; ?>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-sm btn-info">Lưu</button>
                     &nbsp;
-                    <a href="" class="btn btn-sm btn-danger">Hủy</a>
+                    <a href="<?= BASE_URL ?>product" class="btn btn-sm btn-danger">Hủy</a>
                 </div>
 
             </form>
         </div>
     </main>
-
+    <?php unset($_SESSION['error']); ?>
     <?php include_once '../inc/footer.php'; ?>

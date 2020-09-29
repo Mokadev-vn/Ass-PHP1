@@ -12,6 +12,7 @@ if ($id == '') {
 
 if($type == 'delete') {
     remove("users","id = '$id'");
+    $_SESSION['success'] = "Delete User Successfully!";
     header('Location: '. BASE_URL);
     die();
 }

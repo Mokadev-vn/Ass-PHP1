@@ -13,6 +13,10 @@
         });
 
         $(document).on('click', '.remove-img', function(){
+            var id = $(this).attr('id');
+            var valueId = $("input[name='removeGalleries']").val();
+            $("input[name='removeGalleries']").val(valueId +','+ id);
+            console.log(id);
             $(this).parent().parent().remove();
         });
     });

@@ -12,22 +12,24 @@
 
     // validate data
 
-    if($name == '' || $email == '' || $password == '' || $birthdate == ''){
-        $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
-        header('Location: '. BASE_URL .'user/register.php');
-        die();
+    if($name == ''){
+        $msg = "Họ tên không được để trống";
+        error('name',$msg);
+    }
+
+    if($birthdate == ''){
+        $msg = "Vui lòng chọn ngày tháng năm sinh";
+        error('date',$msg);
     }
 
     if(strlen($password) < 6 || (strlen(str_replace(" ","",$password)) != strlen($password))){
-        $_SESSION['error'] = "Mật khẩu không được chứa khoảng trắng và nhiều hơn 6 kí tự!";
-        header('Location: '. BASE_URL .'user/register.php');
-        die();
+        $msg = "Mật khẩu không được chứa khoảng trắng và nhiều hơn 6 kí tự!";
+        error('password',$msg);
     }
 
     if($password != $repassword){
-        $_SESSION['error'] = "Vui lòng nhập 2 mật khẩu trùng nhau";
-        header('Location: '. BASE_URL .'user/register.php');
-        die();
+        $msg = "Vui lòng nhập 2 mật khẩu trùng nhau";
+        error('rePassword',$msg);
     }
 
     if(!preg_match('/^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
@@ -36,29 +38,35 @@
                         || strlen($name) < 2 
                         || strlen($name) > 30){
 
-        $_SESSION['error'] = "Tên Không Được Chứa Kí Tự Đặc Biệt Và Trong Khoảng 4-30 Kí Tự";
-        header('Location: '. BASE_URL .'user/register.php');
-        die();
+        $msg = "Tên Không Được Chứa Kí Tự Đặc Biệt Và Trong Khoảng 4-30 Kí Tự";
+        error('name',$msg);
     }
 
 
     if(!preg_match("/^[a-z][a-z0-9_\.]{1,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$/",$email)){
-        $_SESSION['error'] = "Email sai định dạng!";
-        header('Location: '. BASE_URL .'user/register.php');
-        die();
+        $msg = "Nhập đúng định dạng email!";
+        error('email',$msg);
     }
+
 
 
     $password2 = password_hash($password, PASSWORD_BCRYPT);
 
 
-    $conn = connDB();
-
     $getUserSql = "SELECT * FROM users WHERE email = '$email'";
     $result = getRow($getUserSql);
 
     if($result){
-        $_SESSION['error'] = "Email này đã đăng kí tài khoản rồi";
+        $msg = "Email này đã đăng kí tài khoản rồi";
+        error('email',$msg);
+    }
+
+    if($avatar['size'] <= 0){
+        $msg = "Vui lòng chọn ảnh đại diện";
+        error('img',$msg);
+    }
+
+    if(isset($_SESSION['error'])){
         header('Location: '. BASE_URL .'user/register.php');
         die();
     }

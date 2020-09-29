@@ -10,29 +10,49 @@ if (count($_POST) != 0) {
     $password = isset($_POST['password']) ? $_POST['password'] : '';
     $rePassword = isset($_POST['rePassword']) ? $_POST['rePassword'] : '';
 
-    if ($oldPassword == '' || $password == '' || $rePassword == '') {
-        $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin!";
-        header('Location: ' . BASE_URL . 'user/change-password.php');
-        die();
+    if ($oldPassword == '') {
+        $msg = "Vui lòng nhập mật khẩu cũ!";
+        error('oldPassword', $msg);
     }
 
-    if (strlen($password) < 6 || (strlen(str_replace(" ", "", $password)) != strlen($password))) {
-        $_SESSION['error'] = "Mật khẩu không được chứa khoảng trắng và nhiều hơn 6 kí tự!";
-        header('Location: ' . BASE_URL . 'user/change-password.php');
-        die();
+    if($password == ''){
+        $msg = "Vui lòng nhập mật khẩu mới!";
+        error('password', $msg);
     }
+
+    if($rePassword == ''){
+        $msg = "Vui lòng nhập lại mật khẩu mới!";
+        error('rePassword' , $msg);
+    }
+
+    
+    if (strlen($password) < 6 || (strlen(str_replace(" ", "", $password)) != strlen($password))) {
+        $msg = "Mật khẩu không được chứa khoảng trắng và nhiều hơn 6 kí tự!";
+        error('password', $msg);
+    }
+    
 
     $getUserSql = "SELECT * FROM users WHERE id = '$id'";
     $user = getRow($getUserSql);
 
     if (!password_verify($oldPassword, $user['password'])) {
-        $_SESSION['error'] = "Mật khẩu cũ không chính xác!";
+        $msg = "Mật khẩu cũ không chính xác!";
+        error('oldPassword', $msg);
+    }
+
+    if ($password != $rePassword) {
+        $msg = "Mật khẩu không giống nhau!";
+        error('rePassword', $msg);
+    }
+
+
+    if(isset($_SESSION['error'])){
         header('Location: ' . BASE_URL . 'user/change-password.php');
         die();
     }
 
-    if ($password != $rePassword) {
-        $_SESSION['error'] = "Mật khẩu không giống nhau!";
+
+    if(isset($_SESSION['error'])){
         header('Location: ' . BASE_URL . 'user/change-password.php');
         die();
     }
@@ -78,7 +98,7 @@ if (count($_POST) != 0) {
                     <div class="card-header">EDIT CATEGORIES</div>
                     <form action="<?= BASE_URL ?>user/change-password.php" method="post" style="margin: 20px;">
                         <?php
-                        if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
+                        if (isset($_SESSION['error']) && $_SESSION['error'] != '' && !is_array($_SESSION['error'])) {
                             echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
                             unset($_SESSION['error']);
                         }
@@ -93,19 +113,22 @@ if (count($_POST) != 0) {
                         <div class="form-group">
                             <label for="">Old Password</label>
                             <input type="password" name="oldPassword" class="form-control">
+                            <?= (isset($_SESSION['error']['oldPassword'])) ? '<span class="text-danger">' . $_SESSION['error']['oldPassword'] . '</span>' : ''; ?>
                         </div>
                         <div class="form-group">
                             <label for="">New Password</label>
                             <input type="password" name="password" class="form-control">
+                            <?= (isset($_SESSION['error']['password'])) ? '<span class="text-danger">' . $_SESSION['error']['password'] . '</span>' : ''; ?>
                         </div>
                         <div class="form-group">
                             <label for="">Re-Type New Password</label>
                             <input type="password" name="rePassword" class="form-control">
+                            <?= (isset($_SESSION['error']['rePassword'])) ? '<span class="text-danger">' . $_SESSION['error']['rePassword'] . '</span>' : ''; ?>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-sm btn-info">Lưu</button>
                             &nbsp;
-                            <a href="" class="btn btn-sm btn-danger">Hủy</a>
+                            <a href="<?= BASE_URL ?>" class="btn btn-sm btn-danger">Hủy</a>
                         </div>
 
                     </form>
@@ -113,4 +136,5 @@ if (count($_POST) != 0) {
             </div>
         </div>
     </main>
+    <?php unset($_SESSION['error']); ?>
     <?php include_once '../inc/footer.php'; ?>
